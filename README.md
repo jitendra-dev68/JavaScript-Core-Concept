@@ -162,5 +162,178 @@
 - **Closures:**
   - Functions with access to variables from their lexical scope, even after the outer function has returned.
 
-- **Currying and Partial Application:**
-  - **Currying:** Transforming a function with multiple arguments into a
+- **Currying:**
+  - Transforming a function with multiple arguments into a series of functions each taking a single argument.
+  - **Example:** 
+    ```javascript
+    function curryAdd(a) {
+      return function(b) {
+        return a + b;
+      };
+    }
+    const addFive = curryAdd(5);
+    console.log(addFive(10)); // 15
+    ```
+
+- **Partial Application:**
+  - Pre-filling some arguments of a function, resulting in a new function with fewer arguments.
+  - **Example:**
+    ```javascript
+    function multiply(a, b) {
+      return a * b;
+    }
+    function partialMultiply(a) {
+      return function(b) {
+        return multiply(a, b);
+      };
+    }
+    const double = partialMultiply(2);
+    console.log(double(5)); // 10
+    ```
+
+### **Functional Programming Concepts**
+- **Immutability:**
+  - Avoiding changes to existing data structures. Instead, create new data structures with the desired changes.
+  - **Example:**
+    ```javascript
+    const arr = [1, 2, 3];
+    const newArr = arr.concat(4); // [1, 2, 3, 4]
+    ```
+
+- **Pure Functions:**
+  - Functions that return the same output for the same inputs and have no side effects.
+  - **Example:**
+    ```javascript
+    function add(a, b) {
+      return a + b;
+    }
+    ```
+
+- **Function Composition:**
+  - Combining multiple functions to produce a new function.
+  - **Example:**
+    ```javascript
+    function compose(f, g) {
+      return function(x) {
+        return f(g(x));
+      };
+    }
+    const square = x => x * x;
+    const increment = x => x + 1;
+    const incrementAndSquare = compose(square, increment);
+    console.log(incrementAndSquare(4)); // 25
+    ```
+
+### **Event Loop and Concurrency Model**
+- **Event Loop:**
+  - JavaScript's concurrency model, allowing non-blocking asynchronous operations by utilizing an event queue and call stack.
+  - **Example:**
+    ```javascript
+    console.log('Start');
+    setTimeout(() => console.log('Timeout'), 0);
+    console.log('End');
+    // Output: Start, End, Timeout
+    ```
+
+- **Microtasks and Macrotasks:**
+  - Microtasks (e.g., promises) are processed before macrotasks (e.g., setTimeout).
+  - **Example:**
+    ```javascript
+    console.log('Start');
+    Promise.resolve().then(() => console.log('Promise'));
+    setTimeout(() => console.log('Timeout'), 0);
+    console.log('End');
+    // Output: Start, End, Promise, Timeout
+    ```
+
+### **Proxy and Reflect**
+- **Proxy:**
+  - Allows for the creation of objects with custom behavior for fundamental operations (e.g., property lookup).
+  - **Example:**
+    ```javascript
+    const handler = {
+      get: function(target, prop, receiver) {
+        return prop in target ? target[prop] : 'Not Found';
+      }
+    };
+    const proxy = new Proxy({}, handler);
+    console.log(proxy.foo); // Not Found
+    ```
+
+- **Reflect:**
+  - Provides methods for interceptable operations, like getting or setting properties, and is used with `Proxy` to handle operations.
+  - **Example:**
+    ```javascript
+    const handler = {
+      get: function(target, prop, receiver) {
+        return Reflect.get(...arguments);
+      }
+    };
+    const proxy = new Proxy({ foo: 'bar' }, handler);
+    console.log(proxy.foo); // bar
+    ```
+
+### **Generators and Iterators**
+- **Generators:**
+  - Functions that can be paused and resumed, allowing the use of the `yield` keyword to return values incrementally.
+  - **Example:**
+    ```javascript
+    function* gen() {
+      yield 1;
+      yield 2;
+      yield 3;
+    }
+    const iterator = gen();
+    console.log(iterator.next().value); // 1
+    console.log(iterator.next().value); // 2
+    ```
+
+- **Iterators:**
+  - Objects with a `next` method that returns `{ value, done }` objects, allowing iteration over collections.
+  - **Example:**
+    ```javascript
+    const arr = [1, 2, 3];
+    const iterator = arr[Symbol.iterator]();
+    console.log(iterator.next().value); // 1
+    console.log(iterator.next().value); // 2
+    ```
+
+### **Memory Management and Performance Optimization**
+- **Memory Management:**
+  - Understanding garbage collection, memory leaks, and strategies to manage memory usage efficiently.
+  - **Example:**
+    - Avoid creating global variables unnecessarily and clean up references to large objects.
+
+- **Performance Optimization:**
+  - Techniques for optimizing JavaScript code execution and improving performance, such as debouncing and throttling.
+  - **Example:**
+    - **Debouncing:** Grouping multiple sequential calls to a function into a single call.
+      ```javascript
+      function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+      }
+      ```
+
+### **Web Workers**
+- **Web Workers:**
+  - JavaScript running in the background, separate from the main thread, enabling parallel execution.
+  - **Example:**
+    ```javascript
+    // worker.js
+    onmessage = function(e) {
+      postMessage('Hello ' + e.data);
+    };
+
+    // main.js
+    const worker = new Worker('worker.js');
+    worker.onmessage = function(e) {
+      console.log(e.data);
+    };
+    worker.postMessage('World');
+    ```
+
+
